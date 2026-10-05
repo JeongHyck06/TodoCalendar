@@ -1,0 +1,30 @@
+{
+  "name": "Todo Calendar",
+  "primaryLanguage": "ko",
+  "version": "1.0",
+  "build": "1",
+  "bundleID": "com.jack.TodoCalendar",
+  "sku": "todocalendar-2026",
+  "platforms": [
+    "IOS",
+    "MAC_OS"
+  ],
+  "category": "PRODUCTIVITY",
+  "releaseType": "MANUAL",
+  "territories": [
+    "KOR"
+  ],
+  "price": "FREE",
+  "subtitle": "일정과 할 일을 한곳에",
+  "promotionalText": "학교 시험부터 밴드부 일정까지 종류별로 나누고 오늘 할 일을 달력에서 확인하세요",
+  "description": "일정과 할 일을 한곳에서 관리하세요\n\nTodo Calendar는 학교 시험, 밴드부 일정, 개인 할 일을 종류별로 정리하는 캘린더입니다\n\n주요 기능\n월간 달력에서 일정 확인과 날짜별 투두 관리\n종류별 색상과 필터로 필요한 일정만 확인\n제목과 메모 검색\n투두 추가와 편집, 완료 표시\n종류 이름과 색상 변경\n하루 종일 일정과 로컬 알림\niPad와 Mac의 넓은 화면에서는 사이드바와 월간 주간 일간 보기\n\n로그인이나 광고 없이 사용할 수 있으며 일정은 기기에 저장됩니다\n기기 간 동기화는 지원하지 않습니다\n알림을 사용하려면 기기에서 알림 권한을 허용해야 합니다",
+  "keywords": "투두,캘린더,일정,할일,시험,학교,밴드,계획,메모,생산성",
+  "supportURL": "https://jeonghyck06.github.io/TodoCalendar/support.html",
+  "privacyPolicyURL": "https://jeonghyck06.github.io/TodoCalendar/privacy.html",
+  "marketingURL": "https://jeonghyck06.github.io/TodoCalendar/",
+  "copyright": "2026 Jeonghyeok Im",
+  "reviewNotes": "로그인 없이 사용 가능합니다\n처음 실행하면 현재 월에 예시 일정 14개가 표시됩니다\n상단 추가 버튼으로 투두를 추가하고 종류별 필터를 사용할 수 있습니다\n알림은 로컬 알림이며 알림 설정을 선택할 때만 권한을 요청합니다\n외부 서버로 전송되는 사용자 데이터와 광고 및 결제 기능은 없습니다",
+  "collectsData": false,
+  "containsAds": false,
+  "status": "PREPARATION_NOT_SUBMITTED"
+}
