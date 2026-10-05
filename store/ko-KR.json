@@ -1,5 +1,5 @@
 {
-  "name": "Todo Calendar",
+  "name": "Todo Calendar - Manage easily",
   "primaryLanguage": "ko",
   "version": "1.0",
   "build": "1",
@@ -26,5 +26,6 @@
   "reviewNotes": "로그인 없이 사용 가능합니다\n처음 실행하면 현재 월에 예시 일정 14개가 표시됩니다\n상단 추가 버튼으로 투두를 추가하고 종류별 필터를 사용할 수 있습니다\n알림은 로컬 알림이며 알림 설정을 선택할 때만 권한을 요청합니다\n외부 서버로 전송되는 사용자 데이터와 광고 및 결제 기능은 없습니다",
   "collectsData": false,
   "containsAds": false,
-  "status": "PREPARATION_NOT_SUBMITTED"
+  "status": "BUILDS_UPLOADED_NOT_SUBMITTED",
+  "appleID": "6819344766"
 }
