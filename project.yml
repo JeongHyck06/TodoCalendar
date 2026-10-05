@@ -15,8 +15,12 @@ settings:
     PRODUCT_MODULE_NAME: TodoCalendar
     ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
     CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: 83NF7P2B8P
+    INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+    INFOPLIST_KEY_NSHumanReadableCopyright: Copyright 2026 Jeonghyeok Im
 targets:
   TodoCalendar-iOS:
+    productName: TodoCalendar
     type: application
     platform: iOS
     sources: [TodoCalendar]
@@ -29,6 +33,7 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
   TodoCalendar-macOS:
+    productName: TodoCalendar
     type: application
     platform: macOS
     sources: [TodoCalendar]
@@ -62,12 +67,14 @@ targets:
 schemes:
   TodoCalendar-iOS:
     build:
+      parallelizeBuild: false
       targets:
         TodoCalendar-iOS: all
     test:
       targets: [TodoCalendarUITests]
   TodoCalendar-macOS:
     build:
+      parallelizeBuild: false
       targets:
         TodoCalendar-macOS: all
     test:

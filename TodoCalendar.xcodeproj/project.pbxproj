@@ -12,6 +12,7 @@
 		3164E572A42AE015CA306068 /* TodoModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123E7F27CCB7D59CF5CE6612 /* TodoModels.swift */; };
 		3751B0191BC6B3E7A8CAA0EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61BE78980DF246EF36910441 /* Assets.xcassets */; };
 		43530567D42795E7657CE5EA /* TodoModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123E7F27CCB7D59CF5CE6612 /* TodoModels.swift */; };
+		4725240410ABEA0B0B9B3D9A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 38C936BBCAFED268260A9457 /* PrivacyInfo.xcprivacy */; };
 		5665D2A5BB5F4699544857BD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915CFBFB02478AD3D595D72A /* Theme.swift */; };
 		57004D903EA5BB008D31B99A /* AgendaViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B478C77D9121110F05E5F4C1 /* AgendaViews.swift */; };
 		61FB3F6BEC9C3F6E8660D4D6 /* ReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D92E2646FB22A7FB49255C /* ReminderService.swift */; };
@@ -25,6 +26,7 @@
 		BBEA99A8543D58A7F1280F49 /* CalendarScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53770E3BD8C16FC2356A686 /* CalendarScreen.swift */; };
 		CBFDA0EFB0B0E457398860D8 /* TodoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680857B0E0047C5E3DDF3E5 /* TodoStore.swift */; };
 		D33BC808D9D100364AF1B227 /* TodoCalendarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1C1B0597143F696F36B83A /* TodoCalendarApp.swift */; };
+		D589933F9525A3C4FBD9D64F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 38C936BBCAFED268260A9457 /* PrivacyInfo.xcprivacy */; };
 		DD97A074F8B95ED2405A5D49 /* AgendaViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B478C77D9121110F05E5F4C1 /* AgendaViews.swift */; };
 		DFC2FA1AC985B0F6E23E5C5B /* ReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D92E2646FB22A7FB49255C /* ReminderService.swift */; };
 		EC657F4AE1EC12F194813256 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915CFBFB02478AD3D595D72A /* Theme.swift */; };
@@ -50,29 +52,30 @@
 
 /* Begin PBXFileReference section */
 		123E7F27CCB7D59CF5CE6612 /* TodoModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoModels.swift; sourceTree = "<group>"; };
+		38C936BBCAFED268260A9457 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		408DFBEB2FFECF0C76B039FE /* TodoCalendarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TodoCalendarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		61BE78980DF246EF36910441 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6AA583B255E2BB1F52C4A69F /* TodoCalendarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCalendarTests.swift; sourceTree = "<group>"; };
 		706BF5C39F54B26978B7D5CF /* TodoCalendarUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TodoCalendarUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		86CDF8BE6B0D735598A4B655 /* TodoCalendar.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TodoCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		915CFBFB02478AD3D595D72A /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		9680857B0E0047C5E3DDF3E5 /* TodoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoStore.swift; sourceTree = "<group>"; };
 		99D3EF41CC97C4A91585ED62 /* Editors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Editors.swift; sourceTree = "<group>"; };
-		9D415A75FBAE89586F7CC177 /* TodoCalendar-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TodoCalendar-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EEEE1E2458478FFED396EF0 /* TodoCalendarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCalendarUITests.swift; sourceTree = "<group>"; };
 		B478C77D9121110F05E5F4C1 /* AgendaViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgendaViews.swift; sourceTree = "<group>"; };
 		B7D92E2646FB22A7FB49255C /* ReminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderService.swift; sourceTree = "<group>"; };
 		CD1C1B0597143F696F36B83A /* TodoCalendarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCalendarApp.swift; sourceTree = "<group>"; };
-		D6DA15081CD43DA36AAC2663 /* TodoCalendar-iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "TodoCalendar-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7A82BAA4FF15A89BC116EA7 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		E53770E3BD8C16FC2356A686 /* CalendarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarScreen.swift; sourceTree = "<group>"; };
+		EDD8E4F33012143BDA74A5DE /* TodoCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		2C91FBBD7BF1F1062B446EF0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D6DA15081CD43DA36AAC2663 /* TodoCalendar-iOS.app */,
-				9D415A75FBAE89586F7CC177 /* TodoCalendar-macOS.app */,
+				86CDF8BE6B0D735598A4B655 /* TodoCalendar.app */,
+				EDD8E4F33012143BDA74A5DE /* TodoCalendar.app */,
 				408DFBEB2FFECF0C76B039FE /* TodoCalendarTests.xctest */,
 				706BF5C39F54B26978B7D5CF /* TodoCalendarUITests.xctest */,
 			);
@@ -100,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				61BE78980DF246EF36910441 /* Assets.xcassets */,
+				38C936BBCAFED268260A9457 /* PrivacyInfo.xcprivacy */,
 				CD1C1B0597143F696F36B83A /* TodoCalendarApp.swift */,
 				316B16D0AEB67DC138EC7D79 /* Models */,
 				C375F3D36DD4FAFE3EA1B490 /* Services */,
@@ -200,7 +204,7 @@
 			packageProductDependencies = (
 			);
 			productName = "TodoCalendar-macOS";
-			productReference = 9D415A75FBAE89586F7CC177 /* TodoCalendar-macOS.app */;
+			productReference = EDD8E4F33012143BDA74A5DE /* TodoCalendar.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D82D668BF8AF4AB398E91F1A /* TodoCalendar-iOS */ = {
@@ -218,7 +222,7 @@
 			packageProductDependencies = (
 			);
 			productName = "TodoCalendar-iOS";
-			productReference = D6DA15081CD43DA36AAC2663 /* TodoCalendar-iOS.app */;
+			productReference = 86CDF8BE6B0D735598A4B655 /* TodoCalendar.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -231,16 +235,20 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					2C78D07255689DB73ECEC008 = {
+						DevelopmentTeam = 83NF7P2B8P;
 						ProvisioningStyle = Automatic;
 						TestTargetID = D82D668BF8AF4AB398E91F1A;
 					};
 					5522C70B82B2D04AFFB7D41D = {
+						DevelopmentTeam = 83NF7P2B8P;
 						ProvisioningStyle = Automatic;
 					};
 					8BCFCC8D38B8B4F8731693A7 = {
+						DevelopmentTeam = 83NF7P2B8P;
 						ProvisioningStyle = Automatic;
 					};
 					D82D668BF8AF4AB398E91F1A = {
+						DevelopmentTeam = 83NF7P2B8P;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -273,6 +281,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3751B0191BC6B3E7A8CAA0EF /* Assets.xcassets in Resources */,
+				D589933F9525A3C4FBD9D64F /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +290,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A030DFE5CB90B798E698555A /* Assets.xcassets in Resources */,
+				4725240410ABEA0B0B9B3D9A /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +399,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 83NF7P2B8P;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -401,6 +412,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Todo Calendar";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright 2026 Jeonghyeok Im";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
@@ -555,6 +568,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 83NF7P2B8P;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -573,6 +587,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Todo Calendar";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright 2026 Jeonghyeok Im";
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
