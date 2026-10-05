@@ -112,3 +112,118 @@ struct TodoEditor: View {
     }
 }
 
+struct CategoriesScreen: View {
+    @Environment(TodoStore.self) private var store
+    @Environment(Workspace.self) private var workspace
+    var body: some View {
+        List {
+            Section("내 투두 종류") {
+                ForEach(store.categories) { category in
+                    Button { workspace.categoryEditor = category } label: {
+                        HStack {
+                            Image(systemName: "circle.fill").foregroundStyle(category.color.color)
+                            Text(category.name).foregroundStyle(.primary)
+                            Spacer()
+                            Text("\(store.items.filter { $0.categoryID == category.id && !$0.isCompleted }.count)개 남음").foregroundStyle(.secondary)
+                            Image(systemName: "chevron.right").font(.caption).foregroundStyle(.tertiary)
+                        }
+                    }
+                }
+            }
+            Section {
+                Button("새로운 종류", systemImage: "plus") { workspace.categoryEditor = TodoCategory(name: "", color: .school) }
+                Button("설정", systemImage: "gearshape") { workspace.showSettings = true }
+            }
+        }
+        .navigationTitle("종류")
+    }
+}
+
+struct CategoryEditor: View {
+    @Environment(TodoStore.self) private var store
+    @Environment(Workspace.self) private var workspace
+    @Environment(\.dismiss) private var dismiss
+    @State private var draft: TodoCategory
+    @State private var moveTarget: UUID?
+    @State private var confirmDelete = false
+    @State private var errorMessage: String?
+    init(category: TodoCategory) { _draft = State(initialValue: category) }
+    private var existing: Bool { store.categories.contains { $0.id == draft.id } }
+    private var others: [TodoCategory] { store.categories.filter { $0.id != draft.id } }
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("종류 이름", text: $draft.name).accessibilityIdentifier("categoryName")
+                    Picker("색상", selection: $draft.color) {
+                        ForEach(CategoryColor.allCases) { color in
+                            Label(color.title, systemImage: "circle.fill").foregroundStyle(color.color).tag(color)
+                        }
+                    }
+                }
+                if existing && !others.isEmpty {
+                    Section {
+                        Picker("투두를 이동할 종류", selection: $moveTarget) {
+                            ForEach(others) { Text($0.name).tag(Optional($0.id)) }
+                        }
+                        Button("종류 삭제", role: .destructive) { confirmDelete = true }
+                    } footer: { Text("종류를 삭제하면 해당 투두는 선택한 종류로 이동합니다.") }
+                }
+            }.formStyle(.grouped)
+                .navigationTitle(existing ? "종류 편집" : "새로운 종류")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) { Button("취소", systemImage: "xmark") { dismiss() } }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("저장", systemImage: "checkmark") {
+                            do { try store.saveCategory(draft); dismiss() }
+                            catch { errorMessage = error.localizedDescription }
+                        }.buttonStyle(.borderedProminent).disabled(draft.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
+                }
+                .confirmationDialog("‘\(draft.name)’ 종류를 삭제할까요?", isPresented: $confirmDelete, titleVisibility: .visible) {
+                    Button("투두 이동 후 삭제", role: .destructive) {
+                        guard let target = moveTarget else { return }
+                        do {
+                            try store.deleteCategory(draft.id, movingTo: target)
+                            workspace.filterIDs = nil
+                            dismiss()
+                        } catch { errorMessage = error.localizedDescription }
+                    }
+                }
+                .alert("종류를 저장할 수 없어요", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
+                    Button("확인", role: .cancel) { errorMessage = nil }
+                } message: { Text(errorMessage ?? "") }
+        }
+        .onAppear { moveTarget = others.first?.id }
+        #if os(macOS)
+        .frame(width: 420, height: 340)
+        #endif
+    }
+}
+
+struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @AppStorage("showCompleted") private var showCompleted = true
+    @AppStorage("mondayFirst") private var mondayFirst = false
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("캘린더") {
+                    Toggle("완료한 투두 표시", isOn: $showCompleted)
+                    Toggle("월요일부터 시작", isOn: $mondayFirst)
+                }
+                Section("데이터") {
+                    Text("일정은 이 기기에 자동으로 저장됩니다.")
+                    Text("처음 실행하면 현재 월에 예시 일정 14개가 표시됩니다. 자유롭게 수정하거나 삭제할 수 있습니다.")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
+            }.formStyle(.grouped).navigationTitle("설정")
+                .toolbar { ToolbarItem(placement: .confirmationAction) {
+                    Button("완료", systemImage: "checkmark") { dismiss() }
+                } }
+        }
+        #if os(macOS)
+        .frame(width: 420, height: 330)
+        #endif
+    }
+}
