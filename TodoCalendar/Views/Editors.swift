@@ -217,6 +217,10 @@ struct SettingsView: View {
                     Text("처음 실행하면 현재 월에 예시 일정 14개가 표시됩니다. 자유롭게 수정하거나 삭제할 수 있습니다.")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
+                Section("안내") {
+                    Link("개인정보 처리방침", destination: URL(string: "https://jeonghyck06.github.io/TodoCalendar/privacy.html")!)
+                    Link("고객지원", destination: URL(string: "https://jeonghyck06.github.io/TodoCalendar/support.html")!)
+                }
             }.formStyle(.grouped).navigationTitle("설정")
                 .toolbar { ToolbarItem(placement: .confirmationAction) {
                     Button("완료", systemImage: "checkmark") { dismiss() }
