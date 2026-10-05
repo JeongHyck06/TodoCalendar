@@ -1,0 +1,6 @@
+.DS_Store
+work/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.[mM][dD]
