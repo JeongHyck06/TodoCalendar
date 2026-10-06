@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		03695242ACA6BB98FF599E4A /* Editors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D3EF41CC97C4A91585ED62 /* Editors.swift */; };
 		0BD40F2A2261363518B66B0F /* Editors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D3EF41CC97C4A91585ED62 /* Editors.swift */; };
+		130BBC8BC6E80E56785AB39E /* DateTimeControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62F84F98A81A69CFD695B4 /* DateTimeControls.swift */; };
+		190E4163F835F1D8BF129685 /* DateTimeControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62F84F98A81A69CFD695B4 /* DateTimeControls.swift */; };
 		3164E572A42AE015CA306068 /* TodoModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123E7F27CCB7D59CF5CE6612 /* TodoModels.swift */; };
 		3751B0191BC6B3E7A8CAA0EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61BE78980DF246EF36910441 /* Assets.xcassets */; };
 		43530567D42795E7657CE5EA /* TodoModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123E7F27CCB7D59CF5CE6612 /* TodoModels.swift */; };
@@ -52,6 +54,7 @@
 
 /* Begin PBXFileReference section */
 		123E7F27CCB7D59CF5CE6612 /* TodoModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoModels.swift; sourceTree = "<group>"; };
+		1E62F84F98A81A69CFD695B4 /* DateTimeControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeControls.swift; sourceTree = "<group>"; };
 		38C936BBCAFED268260A9457 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		408DFBEB2FFECF0C76B039FE /* TodoCalendarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TodoCalendarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		61BE78980DF246EF36910441 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -143,6 +146,7 @@
 			children = (
 				B478C77D9121110F05E5F4C1 /* AgendaViews.swift */,
 				E53770E3BD8C16FC2356A686 /* CalendarScreen.swift */,
+				1E62F84F98A81A69CFD695B4 /* DateTimeControls.swift */,
 				99D3EF41CC97C4A91585ED62 /* Editors.swift */,
 				D7A82BAA4FF15A89BC116EA7 /* RootView.swift */,
 				915CFBFB02478AD3D595D72A /* Theme.swift */,
@@ -319,6 +323,7 @@
 			files = (
 				DD97A074F8B95ED2405A5D49 /* AgendaViews.swift in Sources */,
 				9CEE03DE3375F485B5C935A8 /* CalendarScreen.swift in Sources */,
+				130BBC8BC6E80E56785AB39E /* DateTimeControls.swift in Sources */,
 				03695242ACA6BB98FF599E4A /* Editors.swift in Sources */,
 				61FB3F6BEC9C3F6E8660D4D6 /* ReminderService.swift in Sources */,
 				85640DE9B6A030E0E44EC0A0 /* RootView.swift in Sources */,
@@ -335,6 +340,7 @@
 			files = (
 				57004D903EA5BB008D31B99A /* AgendaViews.swift in Sources */,
 				BBEA99A8543D58A7F1280F49 /* CalendarScreen.swift in Sources */,
+				190E4163F835F1D8BF129685 /* DateTimeControls.swift in Sources */,
 				0BD40F2A2261363518B66B0F /* Editors.swift in Sources */,
 				DFC2FA1AC985B0F6E23E5C5B /* ReminderService.swift in Sources */,
 				B26B77D7E09D1F389CA2A909 /* RootView.swift in Sources */,

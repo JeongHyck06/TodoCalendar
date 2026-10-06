@@ -36,18 +36,19 @@ struct TodoEditor: View {
                     }
                 }
                 Section {
-                    DatePicker("날짜", selection: day, displayedComponents: .date)
+                    CalendarDateRow(title: "시작 날짜", selection: day)
                     Toggle("하루 종일", isOn: $draft.isAllDay)
                     if !draft.isAllDay {
-                        DatePicker("시작", selection: $draft.start, displayedComponents: [.hourAndMinute])
-                        DatePicker("종료", selection: $draft.end, displayedComponents: [.date, .hourAndMinute])
+                        CalendarTimeRow(title: "시작 시간", selection: $draft.start)
+                        CalendarDateRow(title: "종료 날짜", selection: $draft.end)
+                        CalendarTimeRow(title: "종료 시간", selection: $draft.end)
                     }
                     Picker("반복", selection: Binding(get: { draft.repeatRule ?? .never }, set: { draft.repeatRule = $0 })) {
                         ForEach(TodoRepeat.allCases) { Text($0.title).tag($0) }
                     }.pickerStyle(.menu).accessibilityIdentifier("todoRepeat")
                     Picker("알림", selection: $draft.reminder) {
                         ForEach(Reminder.allCases) { Text($0.title).tag($0) }
-                    }
+                    }.pickerStyle(.menu)
                 } footer: {
                     if !draft.isAllDay && draft.end <= draft.start {
                         Text("종료 시간은 시작 시간보다 늦어야 합니다.").foregroundStyle(.red)
@@ -91,7 +92,7 @@ struct TodoEditor: View {
         }
         .interactiveDismissDisabled(saving)
         #if os(macOS)
-        .frame(width: 500, height: 570)
+        .frame(width: 520, height: 720)
         #else
         .presentationDetents([.large])
         #endif
