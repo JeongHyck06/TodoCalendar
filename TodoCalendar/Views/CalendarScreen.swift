@@ -45,7 +45,7 @@ struct CalendarScreen: View {
                 if compact {
                     Menu {
                         Button("날짜 이동", systemImage: "calendar") { workspace.showDatePicker = true }
-                        Button("투두 목록", systemImage: "list.bullet") { workspace.tab = .todos }
+                        Button("전체 보기", systemImage: "list.bullet") { workspace.tab = .todos }
                         Button("검색", systemImage: "magnifyingglass") { workspace.isSearching = true }
                     } label: { Image(systemName: "list.bullet") }
                 }

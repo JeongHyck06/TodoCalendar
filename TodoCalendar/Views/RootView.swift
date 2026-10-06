@@ -103,7 +103,7 @@ struct RootView: View {
             Tab("캘린더", systemImage: "calendar", value: AppTab.calendar) {
                 NavigationStack { CalendarScreen(compact: true) }
             }
-            Tab("투두", systemImage: "checkmark.circle", value: AppTab.todos) {
+            Tab("전체 보기", systemImage: "list.bullet", value: AppTab.todos) {
                 NavigationStack { TodoListScreen() }
             }
             Tab("종류", systemImage: "square.grid.2x2", value: AppTab.categories) {
@@ -117,13 +117,17 @@ struct RootView: View {
             SidebarView()
                 .navigationSplitViewColumnWidth(min: 190, ideal: 220, max: 280)
         } detail: {
-            CalendarScreen(compact: false)
+            if workspace.tab == .todos {
+                TodoListScreen()
+            } else {
+                CalendarScreen(compact: false)
                 #if os(macOS)
                 .inspector(isPresented: .constant(true)) {
                     DayAgenda(date: workspace.selectedDate)
                         .inspectorColumnWidth(min: 270, ideal: 320, max: 380)
                 }
                 #endif
+            }
         }
     }
 }
@@ -136,19 +140,29 @@ struct SidebarView: View {
         @Bindable var workspace = workspace
         List {
             Button {
-                workspace.filterIDs = nil; workspace.sidebarToday = false; workspace.mode = .month
+                workspace.filterIDs = nil; workspace.search = ""; workspace.tab = .calendar; workspace.sidebarToday = false; workspace.mode = .month
             } label: {
                 Label { HStack { Text("전체 일정"); Spacer(); Text("\(store.items.count)").foregroundStyle(.secondary) } }
                     icon: { Image(systemName: "calendar").foregroundStyle(.blue) }
             }
-            .listRowBackground(!workspace.sidebarToday ? Color.accentColor.opacity(0.10) : .clear)
+            .listRowBackground(workspace.tab == .calendar && !workspace.sidebarToday ? Color.accentColor.opacity(0.10) : .clear)
             .accessibilityIdentifier("allCategories")
             Button {
+                workspace.search = ""
+                workspace.tab = .todos
+            } label: {
+                Label("전체 보기", systemImage: "list.bullet")
+                    .frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
+            }
+            .listRowBackground(workspace.tab == .todos ? Color.accentColor.opacity(0.10) : .clear)
+            .accessibilityIdentifier("showAllTodos")
+            Button {
+                workspace.tab = .calendar
                 workspace.select(.now); workspace.mode = .day; workspace.sidebarToday = true
             } label: { Label("오늘의 투두", systemImage: "checkmark.circle") }
             Section {
                 ForEach(store.categories) { category in
-                    Button { workspace.toggleCategory(category.id, all: store.categories) } label: {
+                    Button { workspace.tab = .calendar; workspace.toggleCategory(category.id, all: store.categories) } label: {
                         HStack {
                             Image(systemName: workspace.filterIDs?.contains(category.id) ?? true ? "checkmark.square.fill" : "square")
                                 .foregroundStyle(category.color.color)

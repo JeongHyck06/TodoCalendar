@@ -174,6 +174,24 @@ final class CalendarMathTests: XCTestCase {
 }
 
 @MainActor final class AllTodosTests: XCTestCase {
+    func testAllItemsIncludesPastFutureCompletedAndOneEntryPerSeries() throws {
+        let store = TodoStore(fileURL: nil)
+        try store.deleteAllItems()
+        let category = store.categories[0]
+        let past = Date(timeIntervalSince1970: 946684800)
+        let future = Date(timeIntervalSince1970: 4102444800)
+        let completed = TodoItem(title: "Past", categoryID: category.id, start: past, end: past.addingTimeInterval(3600), isCompleted: true)
+        let later = TodoItem(title: "Future", categoryID: category.id, start: future, end: future.addingTimeInterval(3600))
+        let weekly = TodoItem(title: "Weekly", notes: "Find this", categoryID: category.id, start: past, end: past.addingTimeInterval(3600), repeatRule: .weekly)
+        for item in [completed, later, weekly] { try store.save(item) }
+        XCTAssertEqual(store.allItems().count, 3)
+        XCTAssertTrue(store.allItems().contains { $0.id == completed.id && $0.isCompleted })
+        XCTAssertEqual(store.allItems().filter(\.repeatsWeekly).count, 1)
+        XCTAssertEqual(store.allItems(search: " Find this ").map(\.id), [weekly.id])
+        XCTAssertEqual(store.allItems(search: category.name).count, 3)
+        XCTAssertEqual(store.allItems().last?.id, later.id)
+    }
+
     func testDeleteAllPersistsEmptyDocumentAndPreservesCategories() throws {
         let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }

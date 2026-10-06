@@ -116,27 +116,76 @@ struct UpcomingCard: View {
 struct TodoListScreen: View {
     @Environment(TodoStore.self) private var store
     @Environment(Workspace.self) private var workspace
-    @AppStorage("showCompleted") private var showCompleted = true
-    private var filtered: [TodoItem] { store.filtered(categoryIDs: workspace.filterIDs, search: workspace.search, showCompleted: showCompleted) }
-    private var dates: [Date] { Array(Set(filtered.map { Calendar.current.startOfDay(for: $0.start) })).sorted() }
+    private var search: String { workspace.search }
+    private var items: [TodoItem] { store.allItems(search: search) }
+    private var regular: [TodoItem] { items.filter { !$0.repeatsWeekly } }
+    private var repeating: [TodoItem] { items.filter(\.repeatsWeekly) }
+    private var dates: [Date] { Array(Set(regular.map { Calendar.current.startOfDay(for: $0.start) })).sorted() }
+
     var body: some View {
         @Bindable var workspace = workspace
         List {
-            CategoryFilter().listRowSeparator(.hidden)
-            if store.items.contains(where: \.repeatsWeekly) {
-                Text("반복 일정은 오늘부터 1년간 표시됩니다. 다른 날짜는 캘린더에서 확인하세요.")
-                    .font(.footnote).foregroundStyle(.secondary).listRowSeparator(.hidden)
+            Section {
+                HStack {
+                    Label("전체 일정", systemImage: "tray.full")
+                    Spacer()
+                    Text("\(items.count)개").foregroundStyle(.secondary).monospacedDigit()
+                }
+                Text("날짜와 종류에 관계없이 완료한 일정까지 모두 표시합니다. 매주 반복 일정은 한 항목으로 모아 보여 줍니다.")
+                    .font(.footnote).foregroundStyle(.secondary)
             }
-            if filtered.isEmpty { ContentUnavailableView.search(text: workspace.search) }
-            ForEach(dates, id: \.self) { date in AgendaSection(date: date, items: filtered) }
+            if items.isEmpty {
+                if search.isEmpty {
+                    ContentUnavailableView("등록된 일정이 없어요", systemImage: "calendar.badge.plus",
+                                           description: Text("새로운 투두를 추가해 보세요."))
+                } else {
+                    ContentUnavailableView.search(text: search)
+                }
+            }
+            if !repeating.isEmpty {
+                Section("매주 반복") {
+                    ForEach(repeating) { item in
+                        Button { workspace.editor = item } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: "repeat").font(.title3)
+                                    .foregroundStyle(store.category(for: item)?.color.color ?? .accentColor)
+                                    .frame(width: 32)
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Text(item.title).font(.headline).foregroundStyle(.primary)
+                                    Text("\(store.category(for: item)?.name ?? "종류 없음") · 매주 \(item.start.korean("EEEE")) · \(item.isAllDay ? "하루 종일" : item.start.korean("a h:mm"))")
+                                        .font(.footnote).foregroundStyle(.secondary)
+                                    Text("\(item.start.korean("yyyy년 M월 d일"))부터 · 완료 \(item.completedOccurrences?.count ?? 0)회")
+                                        .font(.caption).foregroundStyle(.secondary)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right").font(.caption).foregroundStyle(.tertiary)
+                            }.padding(.vertical, 6).contentShape(Rectangle())
+                        }.buttonStyle(.plain).accessibilityIdentifier("series-\(item.title)")
+                    }
+                }
+            }
+            ForEach(dates, id: \.self) { date in
+                Section(date.korean("yyyy년 M월 d일 EEEE")) {
+                    ForEach(regular.filter { Calendar.current.isDate($0.start, inSameDayAs: date) }) { item in
+                        TodoRow(item: item)
+                    }
+                }
+            }
         }
-        .listStyle(.plain)
-        .navigationTitle("투두")
-        .searchable(text: $workspace.search, prompt: "검색")
+        .listStyle(.inset)
+        .navigationTitle("전체 보기")
+        #if os(iOS)
+        .searchable(text: $workspace.search, prompt: "전체 일정 검색")
+        #endif
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
+            ToolbarItem(id: "allTodosDelete", placement: .primaryAction) {
+                DeleteAllTodosButton()
+            }
+            ToolbarItem(id: "allTodosAdd", placement: .primaryAction) {
                 Button("새로운 투두", systemImage: "plus") { workspace.newTodo(categories: store.categories) }
+                    .accessibilityIdentifier("addTodoFromAll")
             }
         }
     }
 }
+

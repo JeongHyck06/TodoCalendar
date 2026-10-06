@@ -103,6 +103,15 @@ final class TodoStore {
         try commit(next)
     }
 
+    func allItems(search: String = "") -> [TodoItem] {
+        let query = search.trimmingCharacters(in: .whitespacesAndNewlines)
+        return items.filter { item in
+            query.isEmpty || item.title.localizedStandardContains(query) ||
+            item.notes.localizedStandardContains(query) ||
+            (category(for: item)?.name.localizedStandardContains(query) ?? false)
+        }.sorted { $0.start == $1.start ? $0.title < $1.title : $0.start < $1.start }
+    }
+
     func saveCategory(_ category: TodoCategory) throws {
         var category = category
         category.name = category.name.trimmingCharacters(in: .whitespacesAndNewlines)
