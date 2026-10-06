@@ -14,7 +14,9 @@ actor ReminderService {
         guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else { return }
         try Task.checkCancellation()
         // Keep the nearest reminders within the system's pending-notification budget.
-        let future = items.filter { ($0.reminderDate ?? .distantPast) > .now }
+        let now = Date.now
+        let interval = DateInterval(start: now, end: Calendar.current.date(byAdding: .year, value: 2, to: now)!)
+        let future = items.flatMap { $0.occurrences(in: interval) }.filter { ($0.reminderDate ?? .distantPast) > now }
             .sorted { $0.reminderDate! < $1.reminderDate! }.prefix(60)
         center.removeAllPendingNotificationRequests()
         for item in future {
@@ -25,7 +27,7 @@ actor ReminderService {
             content.sound = .default
             let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: item.reminderDate!)
             let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-            try await center.add(UNNotificationRequest(identifier: item.id.uuidString, content: content, trigger: trigger))
+            try await center.add(UNNotificationRequest(identifier: item.occurrenceID, content: content, trigger: trigger))
         }
     }
 }

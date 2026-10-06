@@ -13,7 +13,8 @@ struct CalendarScreen: View {
         return value
     }
     private var visibleItems: [TodoItem] {
-        store.filtered(categoryIDs: workspace.filterIDs, search: workspace.search, showCompleted: showCompleted)
+        store.filtered(categoryIDs: workspace.filterIDs, search: workspace.search, showCompleted: showCompleted,
+            interval: DateInterval(start: days.first!, end: calendar.date(byAdding: .day, value: 1, to: days.last!)!), calendar: calendar)
     }
     private var days: [Date] {
         workspace.mode == .week ? CalendarMath.weekDays(containing: workspace.selectedDate, calendar: calendar)
@@ -91,7 +92,7 @@ struct CalendarScreen: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
                         HStack {
-                            Text(workspace.search.isEmpty ? "오늘, 해야 할 일 \(store.items.filter { CalendarMath.occurs($0, on: .now) && !$0.isCompleted }.count)개" : "‘\(workspace.search)’ 검색 결과")
+                            Text(workspace.search.isEmpty ? "오늘, 해야 할 일 \(store.filtered(categoryIDs: nil, search: "", showCompleted: false, interval: Calendar.current.dateInterval(of: .day, for: .now)!).count)개" : "‘\(workspace.search)’ 검색 결과")
                                 .font(.subheadline).foregroundStyle(.secondary)
                             Spacer()
                             CategoryLegend()
@@ -206,7 +207,7 @@ struct CalendarGrid: View {
                     }
                 }.frame(height: 5)
             } else {
-                ForEach(events.prefix(limit)) { item in
+                ForEach(Array(events.prefix(limit)), id: \.occurrenceID) { item in
                     let color = store.category(for: item)?.color ?? .school
                     Button { workspace.select(date); workspace.editor = item } label: {
                         HStack(spacing: 3) {

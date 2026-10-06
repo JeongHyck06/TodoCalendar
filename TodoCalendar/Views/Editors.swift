@@ -42,20 +42,25 @@ struct TodoEditor: View {
                         DatePicker("시작", selection: $draft.start, displayedComponents: [.hourAndMinute])
                         DatePicker("종료", selection: $draft.end, displayedComponents: [.date, .hourAndMinute])
                     }
+                    Picker("반복", selection: Binding(get: { draft.repeatRule ?? .never }, set: { draft.repeatRule = $0 })) {
+                        ForEach(TodoRepeat.allCases) { Text($0.title).tag($0) }
+                    }.pickerStyle(.menu).accessibilityIdentifier("todoRepeat")
                     Picker("알림", selection: $draft.reminder) {
                         ForEach(Reminder.allCases) { Text($0.title).tag($0) }
                     }
                 } footer: {
                     if !draft.isAllDay && draft.end <= draft.start {
                         Text("종료 시간은 시작 시간보다 늦어야 합니다.").foregroundStyle(.red)
+                    } else if draft.repeatsWeekly {
+                        Text("시작일과 같은 요일과 시간에 매주 반복됩니다. 수정과 삭제는 반복 전체에 적용되며 각 주의 완료는 목록에서 표시할 수 있습니다.")
                     } else {
                         Text("\(store.categories.first { $0.id == draft.categoryID }?.name ?? "선택한 종류") 캘린더에 추가됩니다.")
                     }
                 }
                 if !isNew {
                     Section {
-                        Toggle("완료", isOn: $draft.isCompleted)
-                        Button("투두 삭제", role: .destructive) { confirmDelete = true }
+                        if !draft.repeatsWeekly { Toggle("완료", isOn: $draft.isCompleted) }
+                        Button(draft.repeatsWeekly ? "반복 전체 삭제" : "투두 삭제", role: .destructive) { confirmDelete = true }
                     }
                 }
             }
@@ -77,8 +82,8 @@ struct TodoEditor: View {
             .alert("저장할 수 없어요", isPresented: Binding(get: { errorMessage != nil }, set: { if !$0 { errorMessage = nil } })) {
                 Button("확인", role: .cancel) { errorMessage = nil }
             } message: { Text(errorMessage ?? "") }
-            .confirmationDialog("이 투두를 삭제할까요?", isPresented: $confirmDelete, titleVisibility: .visible) {
-                Button("투두 삭제", role: .destructive) {
+            .confirmationDialog(draft.repeatsWeekly ? "매주 반복되는 모든 일정을 삭제할까요?" : "이 투두를 삭제할까요?", isPresented: $confirmDelete, titleVisibility: .visible) {
+                Button(draft.repeatsWeekly ? "반복 전체 삭제" : "투두 삭제", role: .destructive) {
                     do { try store.delete(draft); dismiss() }
                     catch { errorMessage = error.localizedDescription }
                 }

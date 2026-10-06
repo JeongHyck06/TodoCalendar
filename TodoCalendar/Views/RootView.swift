@@ -52,6 +52,7 @@ final class Workspace {
 struct RootView: View {
     @Environment(TodoStore.self) private var store
     @State private var workspace = Workspace()
+    @Environment(\.scenePhase) private var scenePhase
     @AppStorage("showCompleted") private var showCompleted = true
     @AppStorage("mondayFirst") private var mondayFirst = false
     #if os(iOS)
@@ -73,7 +74,7 @@ struct RootView: View {
             else { desktopLayout }
         }
         .environment(workspace)
-        .sheet(item: $workspace.editor) { TodoEditor(item: $0).environment(workspace) }
+        .sheet(item: $workspace.editor) { TodoEditor(item: store.series(for: $0)).environment(workspace) }
         .sheet(item: $workspace.categoryEditor) { CategoryEditor(category: $0).environment(workspace) }
         .sheet(isPresented: $workspace.showSettings) { SettingsView() }
         .sheet(isPresented: $workspace.showDatePicker) {
@@ -90,8 +91,8 @@ struct RootView: View {
             Button("확인", role: .cancel) { store.errorMessage = nil }
         } message: { Text(store.errorMessage ?? "") }
         .onReceive(NotificationCenter.default.publisher(for: .newTodo)) { _ in workspace.newTodo(categories: store.categories) }
-        .task(id: store.revision) {
-            guard !ProcessInfo.processInfo.arguments.contains("--ui-testing") else { return }
+        .task(id: "\(store.revision)-\(scenePhase)") {
+            guard scenePhase == .active, !ProcessInfo.processInfo.arguments.contains("--ui-testing") else { return }
             do { try await ReminderService.shared.synchronize(store.items) }
             catch { if !Task.isCancelled { store.errorMessage = "알림을 예약하지 못했습니다. \(error.localizedDescription)" } }
         }

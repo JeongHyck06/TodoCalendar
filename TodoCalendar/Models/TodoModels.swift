@@ -35,6 +35,12 @@ enum Reminder: Int, Codable, CaseIterable, Identifiable {
     }
 }
 
+enum TodoRepeat: String, Codable, CaseIterable, Identifiable {
+    case never, weekly
+    var id: Self { self }
+    var title: String { self == .weekly ? "매주" : "안 함" }
+}
+
 struct TodoItem: Codable, Identifiable, Equatable {
     var id: UUID = UUID()
     var title: String
@@ -45,6 +51,33 @@ struct TodoItem: Codable, Identifiable, Equatable {
     var isAllDay: Bool = false
     var isCompleted: Bool = false
     var reminder: Reminder = .none
+    // Optional fields preserve documents created before recurrence was introduced.
+    var repeatRule: TodoRepeat? = nil
+    var completedOccurrences: [Date]? = nil
+    var occurrenceStart: Date? = nil
+
+    var repeatsWeekly: Bool { repeatRule == .weekly }
+    var occurrenceID: String { id.uuidString + ":" + String((occurrenceStart ?? start).timeIntervalSinceReferenceDate) }
+
+    func occurrences(in interval: DateInterval, calendar: Calendar = .current) -> [TodoItem] {
+        guard repeatsWeekly else { return start < interval.end && end > interval.start ? [self] : [] }
+        let duration = end.timeIntervalSince(start)
+        let lookback = interval.start.addingTimeInterval(-duration - 86400)
+        let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: start),
+                                          to: calendar.startOfDay(for: lookback)).day ?? 0
+        var week = max(0, days / 7)
+        var result: [TodoItem] = []
+        while let date = calendar.date(byAdding: .day, value: week * 7, to: start), date < interval.end {
+            var copy = self
+            copy.start = date
+            copy.end = isAllDay ? calendar.date(byAdding: .day, value: 1, to: date)! : date.addingTimeInterval(duration)
+            copy.occurrenceStart = date
+            copy.isCompleted = completedOccurrences?.contains(date) ?? false
+            if copy.end > interval.start { result.append(copy) }
+            week += 1
+        }
+        return result
+    }
 
     var reminderDate: Date? {
         guard reminder != .none, !isCompleted else { return nil }

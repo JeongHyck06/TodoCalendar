@@ -94,3 +94,81 @@ final class CalendarMathTests: XCTestCase {
         XCTAssertNil(item.reminderDate)
     }
 }
+
+@MainActor final class WeeklyRecurrenceTests: XCTestCase {
+    private var calendar: Calendar {
+        var value = Calendar(identifier: .gregorian)
+        value.timeZone = TimeZone(identifier: "America/Los_Angeles")!
+        return value
+    }
+    private func date(_ year: Int, _ month: Int, _ day: Int, _ hour: Int = 9) -> Date {
+        calendar.date(from: DateComponents(year: year, month: month, day: day, hour: hour))!
+    }
+
+    func testWeeklyRecurrenceAcrossDSTAndFarFuture() {
+        let start = date(2026, 3, 1)
+        let item = TodoItem(title: "Weekly", categoryID: UUID(), start: start,
+                            end: start.addingTimeInterval(3600), repeatRule: .weekly)
+        let events = item.occurrences(in: DateInterval(start: start, end: date(2026, 3, 23)), calendar: calendar)
+        XCTAssertEqual(events.count, 4)
+        XCTAssertEqual(events.map { calendar.component(.hour, from: $0.start) }, [9, 9, 9, 9])
+        XCTAssertEqual(Set(events.map(\.occurrenceID)).count, 4)
+        XCTAssertTrue(item.occurrences(in: DateInterval(start: date(2026, 2, 1), end: start), calendar: calendar).isEmpty)
+        let future = item.occurrences(in: DateInterval(start: date(2036, 3, 1), end: date(2036, 4, 1)), calendar: calendar)
+        XCTAssertFalse(future.isEmpty)
+        XCTAssertTrue(future.allSatisfy { calendar.component(.weekday, from: $0.start) == 1 })
+    }
+
+    func testLegacyDocumentAndOccurrenceCompletionPersistence() throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let url = directory.appending(path: "todos.json")
+        let category = TodoCategory(name: "Weekly", color: .band)
+        let start = date(2026, 3, 1)
+        var item = TodoItem(title: "Practice", categoryID: category.id, start: start, end: start.addingTimeInterval(3600))
+        let document = TodoDocument(categories: [category], items: [item])
+        let legacy = try JSONEncoder().encode(document)
+        XCTAssertFalse(String(decoding: legacy, as: UTF8.self).contains("repeatRule"))
+        try legacy.write(to: url)
+        let store = TodoStore(fileURL: url)
+        XCTAssertNil(store.errorMessage)
+        XCTAssertFalse(store.items[0].repeatsWeekly)
+        item.repeatRule = .weekly
+        item.reminder = .thirtyMinutes
+        try store.save(item)
+        let interval = DateInterval(start: start, end: date(2026, 3, 16))
+        let occurrences = store.filtered(categoryIDs: [category.id], search: "Practice", interval: interval, calendar: calendar)
+        XCTAssertEqual(occurrences.count, 3)
+        store.toggle(occurrences[1])
+        let reloaded = TodoStore(fileURL: url)
+        let completed = reloaded.filtered(categoryIDs: nil, search: "", interval: interval, calendar: calendar)
+        XCTAssertEqual(completed.map(\.isCompleted), [false, true, false])
+        XCTAssertNil(completed[1].reminderDate)
+        XCTAssertNotNil(completed[2].reminderDate)
+        XCTAssertEqual(reloaded.filtered(categoryIDs: nil, search: "", showCompleted: false, interval: interval, calendar: calendar).count, 2)
+        XCTAssertThrowsError(try reloaded.save(completed[1]))
+        var series = reloaded.series(for: completed[1])
+        series.title = "Edited"
+        try reloaded.save(series)
+        XCTAssertEqual(reloaded.items.count, 1)
+        XCTAssertEqual(reloaded.filtered(categoryIDs: nil, search: "Edited", interval: interval, calendar: calendar).count, 3)
+        try reloaded.delete(completed[2])
+        XCTAssertTrue(TodoStore(fileURL: url).items.isEmpty)
+    }
+
+    func testAllDayAndOvernightRecurringBoundaries() {
+        let start = calendar.startOfDay(for: date(2026, 3, 1))
+        let item = TodoItem(title: "Day", categoryID: UUID(), start: start,
+                            end: calendar.date(byAdding: .day, value: 1, to: start)!, isAllDay: true, repeatRule: .weekly)
+        let events = item.occurrences(in: DateInterval(start: start, end: date(2026, 3, 10)), calendar: calendar)
+        XCTAssertEqual(events.count, 2)
+        XCTAssertEqual(events[1].end.timeIntervalSince(events[1].start), 23 * 3600)
+        XCTAssertFalse(CalendarMath.occurs(events[1], on: events[1].end, calendar: calendar))
+        let night = date(2026, 3, 6, 23)
+        let overnight = TodoItem(title: "Night", categoryID: UUID(), start: night,
+                                 end: night.addingTimeInterval(7200), repeatRule: .weekly)
+        let nextDay = calendar.dateInterval(of: .day, for: date(2026, 3, 14))!
+        XCTAssertEqual(overnight.occurrences(in: nextDay, calendar: calendar).count, 1)
+    }
+}

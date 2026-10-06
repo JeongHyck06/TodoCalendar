@@ -39,22 +39,40 @@ final class TodoStore {
 
     func category(for item: TodoItem) -> TodoCategory? { categories.first { $0.id == item.categoryID } }
 
-    func filtered(categoryIDs: Set<UUID>?, search: String, showCompleted: Bool = true) -> [TodoItem] {
+    func filtered(categoryIDs: Set<UUID>?, search: String, showCompleted: Bool = true,
+                  interval: DateInterval? = nil, calendar: Calendar = .current) -> [TodoItem] {
         let query = search.trimmingCharacters(in: .whitespacesAndNewlines)
-        return items.filter { item in
+        let today = calendar.startOfDay(for: .now)
+        let recurrenceRange = interval ?? DateInterval(start: today,
+            end: calendar.date(byAdding: .year, value: 1, to: today)!)
+        let matching: [TodoItem] = items.filter { item in
             (categoryIDs == nil || categoryIDs!.contains(item.categoryID)) &&
-            (showCompleted || !item.isCompleted) &&
             (query.isEmpty || item.title.localizedStandardContains(query) ||
              item.notes.localizedStandardContains(query) ||
              (category(for: item)?.name.localizedStandardContains(query) ?? false))
-        }.sorted { $0.start == $1.start ? $0.title < $1.title : $0.start < $1.start }
+        }
+        let expanded: [TodoItem] = matching.flatMap { item -> [TodoItem] in
+            if item.repeatsWeekly || interval != nil { return item.occurrences(in: recurrenceRange, calendar: calendar) }
+            return [item]
+        }
+        let visible = expanded.filter { showCompleted || !$0.isCompleted }
+        return visible.sorted { $0.start == $1.start ? $0.title < $1.title : $0.start < $1.start }
     }
+
+    func series(for item: TodoItem) -> TodoItem { items.first { $0.id == item.id } ?? item }
 
     func save(_ item: TodoItem) throws {
         var item = item
         item.title = item.title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !item.title.isEmpty, item.end > item.start,
               categories.contains(where: { $0.id == item.categoryID }) else { throw StoreError.invalidItem }
+        guard item.occurrenceStart == nil else { throw StoreError.invalidItem }
+        if item.repeatsWeekly {
+            item.isCompleted = false
+            if let previous = items.first(where: { $0.id == item.id }), previous.start != item.start {
+                item.completedOccurrences = nil
+            }
+        } else { item.completedOccurrences = nil }
         var next = document
         if let index = next.items.firstIndex(where: { $0.id == item.id }) { next.items[index] = item }
         else { next.items.append(item) }
@@ -63,7 +81,13 @@ final class TodoStore {
 
     func toggle(_ item: TodoItem) {
         guard var latest = items.first(where: { $0.id == item.id }) else { return }
-        latest.isCompleted.toggle()
+        if latest.repeatsWeekly {
+            let date = item.occurrenceStart ?? item.start
+            var completed = latest.completedOccurrences ?? []
+            if completed.contains(date) { completed.removeAll { $0 == date } }
+            else { completed.append(date) }
+            latest.completedOccurrences = completed
+        } else { latest.isCompleted.toggle() }
         perform { try save(latest) }
     }
 

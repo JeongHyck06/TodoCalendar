@@ -4,6 +4,7 @@ struct TodoRow: View {
     let item: TodoItem
     @Environment(TodoStore.self) private var store
     @Environment(Workspace.self) private var workspace
+    @State private var confirmSeriesDelete = false
     var body: some View {
         let category = store.category(for: item)
         HStack(spacing: 12) {
@@ -19,6 +20,7 @@ struct TodoRow: View {
                     Text(item.title).font(.headline).foregroundStyle(item.isCompleted ? .secondary : .primary)
                         .strikethrough(item.isCompleted)
                     HStack(spacing: 4) {
+                        if item.repeatsWeekly { Image(systemName: "repeat").accessibilityLabel("매주 반복") }
                         CategoryDot(color: category?.color ?? .school)
                         Text("\(category?.name ?? "종류 없음") · \(item.isAllDay ? "하루 종일" : item.start.korean("HH:mm") + "–" + item.end.korean("HH:mm"))")
                             .font(.footnote).foregroundStyle(.secondary)
@@ -31,12 +33,19 @@ struct TodoRow: View {
         .contextMenu {
             Button("편집", systemImage: "pencil") { workspace.editor = item }
             Button(item.isCompleted ? "완료 취소" : "완료", systemImage: "checkmark.circle") { store.toggle(item) }
-            Button("삭제", systemImage: "trash", role: .destructive) { store.perform { try store.delete(item) } }
+            Button(item.repeatsWeekly ? "반복 전체 삭제" : "삭제", systemImage: "trash", role: .destructive) { delete() }
         }
         .swipeActions(edge: .trailing) {
-            Button("삭제", role: .destructive) { store.perform { try store.delete(item) } }
+            Button(item.repeatsWeekly ? "반복 전체 삭제" : "삭제", role: .destructive) { delete() }
             Button("편집") { workspace.editor = item }.tint(.blue)
         }
+        .confirmationDialog("매주 반복되는 모든 일정을 삭제할까요?", isPresented: $confirmSeriesDelete, titleVisibility: .visible) {
+            Button("반복 전체 삭제", role: .destructive) { store.perform { try store.delete(item) } }
+        }
+    }
+    private func delete() {
+        if item.repeatsWeekly { confirmSeriesDelete = true }
+        else { store.perform { try store.delete(item) } }
     }
 }
 
@@ -50,7 +59,7 @@ struct AgendaSection: View {
                 ContentUnavailableView("등록된 투두가 없어요", systemImage: "checkmark.circle", description: Text("다른 날짜나 종류를 선택하거나\n새로운 투두를 추가해 보세요."))
                     .listRowSeparator(.hidden)
             } else {
-                ForEach(daily) { TodoRow(item: $0) }
+                ForEach(daily, id: \.occurrenceID) { TodoRow(item: $0) }
             }
         } header: {
             VStack(alignment: .leading, spacing: 12) {
@@ -72,7 +81,10 @@ struct DayAgenda: View {
     @Environment(Workspace.self) private var workspace
     @AppStorage("showCompleted") private var showCompleted = true
     var body: some View {
-        let items = store.filtered(categoryIDs: workspace.filterIDs, search: workspace.search, showCompleted: showCompleted)
+        let start = min(Calendar.current.startOfDay(for: date), Calendar.current.startOfDay(for: .now))
+        let end = Calendar.current.date(byAdding: .year, value: 1, to: max(date, .now))!
+        let items = store.filtered(categoryIDs: workspace.filterIDs, search: workspace.search, showCompleted: showCompleted,
+                                   interval: DateInterval(start: start, end: end))
         List {
             AgendaSection(date: date, items: items)
             if showUpcoming { Section { UpcomingCard(items: items).padding(.vertical) }.listRowSeparator(.hidden) }
@@ -111,6 +123,10 @@ struct TodoListScreen: View {
         @Bindable var workspace = workspace
         List {
             CategoryFilter().listRowSeparator(.hidden)
+            if store.items.contains(where: \.repeatsWeekly) {
+                Text("반복 일정은 오늘부터 1년간 표시됩니다. 다른 날짜는 캘린더에서 확인하세요.")
+                    .font(.footnote).foregroundStyle(.secondary).listRowSeparator(.hidden)
+            }
             if filtered.isEmpty { ContentUnavailableView.search(text: workspace.search) }
             ForEach(dates, id: \.self) { date in AgendaSection(date: date, items: filtered) }
         }
