@@ -172,3 +172,37 @@ final class CalendarMathTests: XCTestCase {
         XCTAssertEqual(overnight.occurrences(in: nextDay, calendar: calendar).count, 1)
     }
 }
+
+@MainActor final class AllTodosTests: XCTestCase {
+    func testDeleteAllPersistsEmptyDocumentAndPreservesCategories() throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let url = directory.appending(path: "todos.json")
+        let store = TodoStore(fileURL: url)
+        let categories = store.categories
+        var weekly = store.items[0]
+        weekly.repeatRule = .weekly
+        weekly.completedOccurrences = [weekly.start]
+        try store.save(weekly)
+        let revision = store.revision
+        try store.deleteAllItems()
+        XCTAssertEqual(store.revision, revision + 1)
+        XCTAssertTrue(store.items.isEmpty)
+        let reloaded = TodoStore(fileURL: url)
+        XCTAssertTrue(reloaded.items.isEmpty)
+        XCTAssertEqual(reloaded.categories, categories)
+        XCTAssertNil(reloaded.errorMessage)
+    }
+
+    func testDeleteAllDoesNotOverwriteUnreadableData() throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let url = directory.appending(path: "todos.json")
+        let original = Data("unreadable data".utf8)
+        try original.write(to: url)
+        let store = TodoStore(fileURL: url)
+        XCTAssertThrowsError(try store.deleteAllItems())
+        XCTAssertEqual(try Data(contentsOf: url), original)
+    }
+}

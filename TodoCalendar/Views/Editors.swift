@@ -220,6 +220,7 @@ struct SettingsView: View {
                 }
                 Section("데이터") {
                     Text("일정은 이 기기에 자동으로 저장됩니다.")
+                    DeleteAllTodosButton()
                     Text("처음 실행하면 현재 월에 예시 일정 14개가 표시됩니다. 자유롭게 수정하거나 삭제할 수 있습니다.")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
@@ -233,7 +234,7 @@ struct SettingsView: View {
                 } }
         }
         #if os(macOS)
-        .frame(width: 420, height: 330)
+        .frame(width: 440, height: 400)
         #endif
     }
 }

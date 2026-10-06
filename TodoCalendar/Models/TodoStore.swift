@@ -97,6 +97,12 @@ final class TodoStore {
         try commit(next)
     }
 
+    func deleteAllItems() throws {
+        var next = document
+        next.items.removeAll()
+        try commit(next)
+    }
+
     func saveCategory(_ category: TodoCategory) throws {
         var category = category
         category.name = category.name.trimmingCharacters(in: .whitespacesAndNewlines)

@@ -12,11 +12,13 @@
 		130BBC8BC6E80E56785AB39E /* DateTimeControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62F84F98A81A69CFD695B4 /* DateTimeControls.swift */; };
 		190E4163F835F1D8BF129685 /* DateTimeControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62F84F98A81A69CFD695B4 /* DateTimeControls.swift */; };
 		3164E572A42AE015CA306068 /* TodoModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123E7F27CCB7D59CF5CE6612 /* TodoModels.swift */; };
+		337F3E57DA1C28C38BE9850F /* BulkActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7952F0267D130E22E06486A /* BulkActions.swift */; };
 		3751B0191BC6B3E7A8CAA0EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61BE78980DF246EF36910441 /* Assets.xcassets */; };
 		43530567D42795E7657CE5EA /* TodoModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123E7F27CCB7D59CF5CE6612 /* TodoModels.swift */; };
 		4725240410ABEA0B0B9B3D9A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 38C936BBCAFED268260A9457 /* PrivacyInfo.xcprivacy */; };
 		5665D2A5BB5F4699544857BD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915CFBFB02478AD3D595D72A /* Theme.swift */; };
 		57004D903EA5BB008D31B99A /* AgendaViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B478C77D9121110F05E5F4C1 /* AgendaViews.swift */; };
+		60BC9997BE1EF14BDAE27646 /* BulkActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7952F0267D130E22E06486A /* BulkActions.swift */; };
 		61FB3F6BEC9C3F6E8660D4D6 /* ReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D92E2646FB22A7FB49255C /* ReminderService.swift */; };
 		85640DE9B6A030E0E44EC0A0 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A82BAA4FF15A89BC116EA7 /* RootView.swift */; };
 		9CEE03DE3375F485B5C935A8 /* CalendarScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53770E3BD8C16FC2356A686 /* CalendarScreen.swift */; };
@@ -71,6 +73,7 @@
 		D7A82BAA4FF15A89BC116EA7 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		E53770E3BD8C16FC2356A686 /* CalendarScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarScreen.swift; sourceTree = "<group>"; };
 		EDD8E4F33012143BDA74A5DE /* TodoCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7952F0267D130E22E06486A /* BulkActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkActions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -145,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				B478C77D9121110F05E5F4C1 /* AgendaViews.swift */,
+				F7952F0267D130E22E06486A /* BulkActions.swift */,
 				E53770E3BD8C16FC2356A686 /* CalendarScreen.swift */,
 				1E62F84F98A81A69CFD695B4 /* DateTimeControls.swift */,
 				99D3EF41CC97C4A91585ED62 /* Editors.swift */,
@@ -322,6 +326,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD97A074F8B95ED2405A5D49 /* AgendaViews.swift in Sources */,
+				337F3E57DA1C28C38BE9850F /* BulkActions.swift in Sources */,
 				9CEE03DE3375F485B5C935A8 /* CalendarScreen.swift in Sources */,
 				130BBC8BC6E80E56785AB39E /* DateTimeControls.swift in Sources */,
 				03695242ACA6BB98FF599E4A /* Editors.swift in Sources */,
@@ -339,6 +344,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				57004D903EA5BB008D31B99A /* AgendaViews.swift in Sources */,
+				60BC9997BE1EF14BDAE27646 /* BulkActions.swift in Sources */,
 				BBEA99A8543D58A7F1280F49 /* CalendarScreen.swift in Sources */,
 				190E4163F835F1D8BF129685 /* DateTimeControls.swift in Sources */,
 				0BD40F2A2261363518B66B0F /* Editors.swift in Sources */,
